@@ -42,7 +42,12 @@ def sql_thing():
         for row in ret[chan]:
             string_to_send.append("%s <%s> %s" % (row['date'], row['nick'], row['message']))
             conn.execute("delete from data where id=?", (row['id'],))
-            
+
+    #delete old ones (keeping a minute gap)
+    delete = before - datetime.timedelta(minutes=1)
+    delete_str = str(delete)[:str(delete).find('.')]
+    conn.execute("delete from data where date < ?", (delete_str, ))
+    
     conn.commit()
     conn.close();
     return string_to_send
