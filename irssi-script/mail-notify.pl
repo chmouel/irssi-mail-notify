@@ -20,18 +20,18 @@ $VERSION = "0.01";
     license     => 'GNU General Public License'
 );
 
-Irssi::settings_add_str('mail-notify', 'mail-notify.py', '/usr/local/bin/mail-notify.py');
-
 sub mentionned {
     my ($dest, $text, $stripped) = @_;
     my $server = $dest->{server};
     my $sender = $stripped;
     my $channel = $dest->{'target'};
     my $mynick = $dest->{'window'}{'active_server'}{'nick'};
+
     return if (!$server || !($dest->{level} & MSGLEVEL_HILIGHT));
     $sender =~ s/^\<\s*([^\>]+)\s*\>.+/$1/;
     $stripped =~ s/\<.[^\>]+\>.${mynick}:\s*//;
     $channel =~ s/^#//;
+    debug("Mentonned: Channel: $channel MyNICK: $mynick Sender: $sender");
     insert_sqlite($sender, $channel, $stripped);
 }
 
